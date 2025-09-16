@@ -337,26 +337,20 @@ if (!isMobileDevice()) {
         body.low-performance .astro-card:hover {
             /* Use a cheaper transform for feedback. */
             transform: translateY(-4px);
-            /* Keep the border color change as it's not expensive. */
             border-color: rgba(var(--color-accent-rgb), 0.25);
-            /* Disable the expensive box-shadow. */
             box-shadow: none;
         }
         body.low-performance .astro-card::before {
-            /* Disable the mouse-following gradient. */
             display: none;
         }
         body.low-performance .ssu-active-broadcast::before,
         body.low-performance .ssu-active-broadcast::after {
-            /* Disable the pulsing SSU animation. */
             animation: none;
         }
         body.low-performance #global-background-canvas {
-            /* Hide the canvas completely. */
             display: none;
         }
 
-        /* Animation Toggle Button */
         .anim-toggle-btn {
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -372,30 +366,16 @@ if (!isMobileDevice()) {
             color: white;
         }
     </style>
-
-    <!-- Google Tag Manager (Head) -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0], j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src= 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f); })(window,document,'script','dataLayer','GTM-PBSPX4GB');</script>
-
-
-    <!-- Google Tag Manager (Body) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PBSPX4GB" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-
-    <!-- This canvas is for the animated background. It's controlled by JS. -->
+    
     <canvas id="global-background-canvas" width="940" height="688"></canvas>
 
-    
-    <!-- ==================================================================
-     HEADER
-    =================================================================== -->
     <header class="main-header sticky top-0 z-50">
         <nav class="max-w-screen-2xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 h-[var(--header-height)]">
-            <!-- Logo -->
             <a href="/" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
                 <img src="https://cdn.discordapp.com/icons/1406484925288415273/8285e3b4e225d3f72f1db7ab84f41ce1.png?size=80&amp;quality=lossless" class="h-10 w-auto rounded-full object-contain" alt="Revolution Logo" decoding="async">
                 <span class="text-xl font-bold text-white tracking-wider hidden sm:block">Revolution</span>
             </a>
 
-            <!-- Desktop Navigation -->
             <div class="hidden md:flex items-center gap-2 text-sm font-medium">
                 <a href="/" class="text-white bg-slate-700/50 px-4 py-2 rounded-lg transition-colors">Home</a>
                 <a href="https://discord.gg/W4CBEMDs6X" class="text-slate-300 hover:bg-slate-700/50 hover:text-white px-4 py-2 rounded-lg transition-colors">Support</a>
@@ -406,9 +386,6 @@ if (!isMobileDevice()) {
 
     <main>
 
-        <!-- ==================================================================
-         HERO SECTION
-        =================================================================== -->
         <section id="hero-section" class="relative text-center h-screen flex flex-col justify-center items-center px-4 overflow-hidden">
             <div class="absolute inset-0 bg-gradient-to-b from-transparent to-[var(--color-background)] z-10"></div>
             <div id="hero-content" class="relative z-20">
@@ -428,9 +405,6 @@ if (!isMobileDevice()) {
             </div>
         </section>
 
-        <!-- =================================================================
-         FEATURES SECTION (RESTORED)
-        ================================================================== -->
         <section id="features-section" class="py-20 sm:py-24 px-4 max-w-screen-xl mx-auto scroll-section">
             <div class="text-center mb-16">
                 <p class="mt-3 text-4xl sm:text-5xl font-extrabold text-white">Stop Wasting Time with Paid Bots.</p>
@@ -461,9 +435,6 @@ if (!isMobileDevice()) {
             </div>
         </section>
 
-        <!-- =================================================================
-         FINAL CTA SECTION (RESTORED)
-        ================================================================== -->
         <section class="max-w-screen-xl mx-auto px-4 py-20 sm:py-24 scroll-section">
              <div class="bg-gradient-to-br from-purple-900/40 via-slate-900/20 to-black/30 p-8 sm:p-16 rounded-2xl text-center relative overflow-hidden border border-purple-800/50 astro-card">
                  <div class="relative z-10">
@@ -478,9 +449,6 @@ if (!isMobileDevice()) {
 
     </main>
 
-    <!-- ==================================================================
-     FOOTER
-    =================================================================== -->
     <footer class="bg-black/50 border-t border-slate-800 text-center py-12">
         <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
             <img src="https://cdn.discordapp.com/icons/1406484925288415273/8285e3b4e225d3f72f1db7ab84f41ce1.png?size=80&amp;quality=lossless" alt="Revolution Small Logo" class="h-12 w-auto mx-auto mb-4 rounded-full" loading="lazy" decoding="async">
@@ -498,428 +466,7 @@ if (!isMobileDevice()) {
              </div>
         </div>
     </footer>
-
     
-    <!--
-    |==========================================================================
-    | VI. PAGE SCRIPTS & WIDGETS (ISOLATED)
-    |==========================================================================
-    -->
-
-    <!-- Main Application Logic (Hardcoded) -->
-    <script>
-        /**
-         * Revolution - Main Application Script
-         * Version: 2.3
-         *
-         * This script initializes all interactive and performance-related
-         * features of the website. It is loaded with `defer` to ensure it
-         * runs after the DOM is parsed but before the DOMContentLoaded event.
-         *
-         * Changelog v2.3:
-         * - FIXED: Reworked canvas star rendering to use fillRect for crisp pixels,
-         * preventing blurry/streaky lines.
-         * - FIXED: Removed `will-change: transform` from body CSS to prevent
-         * issues with `position: fixed` elements like widgets.
-         *
-         * Features:
-         * - Self-optimizing background animation.
-         * - Performance monitoring that disables expensive effects on slow devices.
-         * - Lazy loading for images using IntersectionObserver.
-         * - User controls for animations.
-         * - Mobile menu and scroll-triggered animations.
-         */
-        document.addEventListener('DOMContentLoaded', () => {
-
-            /**
-             * PerformanceMonitor Class
-             * Measures FPS and applies a 'low-performance' class to the body if the
-             * frame rate drops below a certain threshold. This allows CSS to
-             * gracefully degrade animations.
-             */
-            class PerformanceMonitor {
-                constructor() {
-                    this.fps = 60;
-                    this.frames = [];
-                    this.lastFrameTime = performance.now();
-                    this.lowPerfThreshold = 35; // FPS below this is low performance
-                    this.highPerfThreshold = 55; // FPS above this is high performance
-                    this.checkInterval = 1000; // Time in ms to check average FPS
-                    this.isLowPerformance = false;
-                    this.isPaused = false; // Can be toggled by user controls
-
-                    setInterval(() => this.assessPerformance(), this.checkInterval);
-                }
-
-                tick() {
-                    if (this.isPaused) return;
-                    const now = performance.now();
-                    const delta = now - this.lastFrameTime;
-                    this.lastFrameTime = now;
-                    const currentFps = 1000 / delta;
-
-                    // Add current FPS to our rolling average array
-                    this.frames.push(currentFps);
-                    if (this.frames.length > 60) { // Keep last 60 frames
-                        this.frames.shift();
-                    }
-                }
-
-                getAverageFPS() {
-                    if (this.frames.length === 0) return 60;
-                    const sum = this.frames.reduce((a, b) => a + b, 0);
-                    return sum / this.frames.length;
-                }
-
-                assessPerformance() {
-                    if (this.isPaused) return;
-                    const avgFPS = this.getAverageFPS();
-
-                    if (avgFPS < this.lowPerfThreshold && !this.isLowPerformance) {
-                        this.isLowPerformance = true;
-                        document.body.classList.add('low-performance');
-                        console.warn('Low performance mode ACTIVATED. Disabling expensive animations.');
-                    } else if (avgFPS > this.highPerfThreshold && this.isLowPerformance) {
-                        this.isLowPerformance = false;
-                        document.body.classList.remove('low-performance');
-                        console.info('Performance recovered. Re-enabling animations.');
-                    }
-                }
-            }
-
-            const perfMonitor = new PerformanceMonitor();
-
-            /**
-             * Main initialization function.
-             * Orchestrates the setup of all features.
-             */
-            function init() {
-                // Initialize core UI features immediately
-                initMobileMenu();
-                initScrollAnimations();
-                initAnimationToggle();
-                initLazyImageLoader();
-
-                // Check for user's preference for reduced motion
-                const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-                if (prefersReducedMotion) {
-                    console.log("Prefers reduced motion: Disabling all animations.");
-                    document.body.classList.add('low-performance');
-                    // Simulate a click on the toggle to set the correct state and text
-                    const toggleBtn = document.getElementById('anim-toggle');
-                    if (toggleBtn) toggleBtn.click();
-                    return; // Stop here, don't initialize heavy animations
-                }
-
-                // Defer heavy animations to run after a short idle period,
-                // so the page feels responsive faster.
-                requestIdleCallback(() => {
-                    initAstroCardHover();
-                    initTextScramble();
-                    initBackgroundCanvas();
-                }, { timeout: 2000 });
-            }
-
-            /**
-             * Toggles the mobile navigation menu.
-             */
-            function initMobileMenu() {
-                const mobileMenuButton = document.getElementById('mobileMenuButton');
-                const mobileMenu = document.getElementById('mobileMenu');
-                if (mobileMenuButton && mobileMenu) {
-                    mobileMenuButton.addEventListener('click', () => {
-                        mobileMenu.classList.toggle('hidden');
-                    });
-                }
-            }
-
-            /**
-             * Fades in sections as they are scrolled into view.
-             */
-            function initScrollAnimations() {
-                const scrollSections = document.querySelectorAll('.scroll-section');
-                if (scrollSections.length === 0) return;
-
-                const observer = new IntersectionObserver((entries, observer) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add('is-visible');
-                            observer.unobserve(entry.target); // Animate only once
-                        }
-                    });
-                }, { threshold: 0.1 });
-
-                scrollSections.forEach(section => observer.observe(section));
-            }
-
-            /**
-             * Advanced Lazy Image Loader
-             * Uses IntersectionObserver to load images only when they are near the viewport.
-             * Also handles image load errors gracefully.
-             */
-            function initLazyImageLoader() {
-                const lazyImages = document.querySelectorAll('.lazy-image');
-                if (lazyImages.length === 0) return;
-
-                const imageObserver = new IntersectionObserver((entries, observer) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            const img = entry.target;
-                            const fallback = img.nextElementSibling;
-
-                            img.src = img.dataset.src;
-
-                            img.onload = () => {
-                                img.classList.remove('lazy-image');
-                            };
-
-                            img.onerror = () => {
-                                console.error(`Failed to load image: ${img.dataset.src}`);
-                                img.style.display = 'none';
-                                if (fallback && fallback.classList.contains('fallback-initial')) {
-                                    fallback.style.display = 'flex';
-                                }
-                            };
-                            observer.unobserve(img);
-                        }
-                    });
-                }, { rootMargin: "0px 0px 200px 0px" }); // Load when 200px from viewport bottom
-
-                lazyImages.forEach(image => imageObserver.observe(image));
-            }
-
-
-            /**
-             * Adds the interactive mouse-follow glow to astro cards.
-             */
-            function initAstroCardHover() {
-                const cards = document.querySelectorAll('.astro-card');
-                if (cards.length === 0) return;
-
-                cards.forEach(card => {
-                    card.addEventListener('mousemove', e => {
-                        // Use requestAnimationFrame to throttle updates and improve performance.
-                        requestAnimationFrame(() => {
-                            const rect = card.getBoundingClientRect();
-                            const x = e.clientX - rect.left;
-                            const y = e.clientY - rect.top;
-                            card.style.setProperty('--mouse-x', `${x}px`);
-                            card.style.setProperty('--mouse-y', `${y}px`);
-                        });
-                    });
-                });
-            }
-
-            /**
-             * Controls the text scramble effect on the hero section.
-             * OPTIMIZED: Animation is faster and less demanding.
-             */
-            function initTextScramble() {
-                class TextScramble {
-                    constructor(el) {
-                        this.el = el;
-                        this.chars = '!<>-_\\/[]{}—=+*^?#________';
-                        this.update = this.update.bind(this);
-                    }
-                    setText(newText) {
-                        const oldText = this.el.innerText;
-                        const length = Math.max(oldText.length, newText.length);
-                        const promise = new Promise((resolve) => this.resolve = resolve);
-                        this.queue = [];
-                        for (let i = 0; i < length; i++) {
-                            const from = oldText[i] || '';
-                            const to = newText[i] || '';
-                            // FASTER: Reduced random frame counts for quicker animation.
-                            const start = Math.floor(Math.random() * 20);
-                            const end = start + Math.floor(Math.random() * 20);
-                            this.queue.push({ from, to, start, end });
-                        }
-                        cancelAnimationFrame(this.frameRequest);
-                        this.frame = 0;
-                        this.update();
-                        return promise;
-                    }
-                    update() {
-                        let output = '';
-                        let complete = 0;
-                        for (let i = 0, n = this.queue.length; i < n; i++) {
-                            let { from, to, start, end, char } = this.queue[i];
-                            if (this.frame >= end) {
-                                complete++;
-                                output += to;
-                            } else if (this.frame >= start) {
-                                if (!char || Math.random() < 0.28) {
-                                    char = this.randomChar();
-                                    this.queue[i].char = char;
-                                }
-                                output += `<span class="scramble-char">${char}</span>`;
-                            } else {
-                                output += from;
-                            }
-                        }
-                        this.el.innerHTML = output;
-                        if (complete === this.queue.length) {
-                            this.resolve();
-                        } else {
-                            this.frameRequest = requestAnimationFrame(this.update);
-                            this.frame++;
-                        }
-                    }
-                    randomChar() {
-                        return this.chars[Math.floor(Math.random() * this.chars.length)];
-                    }
-                }
-
-                const lines = document.querySelectorAll('.scramble-text-line');
-                if (lines.length === 0) return;
-
-                const fx = Array.from(lines).map(line => new TextScramble(line));
-                let scrambleCounter = 0;
-                const nextScramble = () => {
-                    if (scrambleCounter >= fx.length || document.body.classList.contains('low-performance')) {
-                        // If animations are disabled, just set the final text immediately.
-                        lines.forEach(line => {
-                            line.innerHTML = line.dataset.text;
-                        });
-                        return;
-                    }
-                    const text = lines[scrambleCounter].dataset.text;
-                    fx[scrambleCounter].setText(text).then(() => {
-                        // FASTER: Reduced delay between lines.
-                        setTimeout(nextScramble, 150);
-                    });
-                    scrambleCounter++;
-                };
-
-                setTimeout(nextScramble, 500); // Initial delay
-            }
-
-            /**
-             * Adds a user-facing button to pause/resume all heavy animations.
-             */
-            function initAnimationToggle() {
-                const toggleBtn = document.getElementById('anim-toggle');
-                if (!toggleBtn) return;
-
-                let isAnimationEnabled = !document.body.classList.contains('low-performance');
-                toggleBtn.textContent = isAnimationEnabled ? 'Pause Animations' : 'Resume Animations';
-
-                toggleBtn.addEventListener('click', () => {
-                    isAnimationEnabled = !isAnimationEnabled;
-                    if (isAnimationEnabled) {
-                        document.body.classList.remove('low-performance');
-                        perfMonitor.isPaused = false;
-                        toggleBtn.textContent = 'Pause Animations';
-                    } else {
-                        document.body.classList.add('low-performance');
-                        perfMonitor.isPaused = true;
-                        toggleBtn.textContent = 'Resume Animations';
-                    }
-                });
-            }
-
-            /**
-             * Self-optimizing background canvas animation.
-             * FIXED: Star rendering logic updated for crisp pixels.
-             */
-            function initBackgroundCanvas() {
-                const canvas = document.getElementById('global-background-canvas');
-                if (!canvas) return;
-                const ctx = canvas.getContext('2d');
-
-                let width, height, stars = [];
-                const maxStars = 150;
-                const minStars = 20;
-                let targetStarCount = 80; // Start with a medium amount
-
-                class Star {
-                    constructor() { this.reset(); }
-                    reset() {
-                        this.z = Math.random() * 2;
-                        // Make size an integer (1 or 2px) to avoid sub-pixel blurring.
-                        this.size = this.z > 1.5 ? 2 : 1;
-                        this.x = Math.random() * width;
-                        this.y = Math.random() * height;
-                        // Adjusted velocity to be smooth but not streaky.
-                        this.vx = (Math.random() - 0.5) * 0.07 * this.z;
-                        this.vy = (Math.random() - 0.5) * 0.07 * this.z;
-                        this.opacity = (this.z / 2) * 0.8 + 0.1;
-                    }
-                    draw() {
-                        // Use fillRect for crisp, fast pixels instead of blurry sub-pixel arcs.
-                        ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
-                        ctx.fillRect(this.x, this.y, this.size, this.size);
-                    }
-                    update() {
-                        this.x += this.vx;
-                        this.y += this.vy;
-                        if (this.x < -this.size || this.x > width) this.vx *= -1;
-                        if (this.y < -this.size || this.y > height) this.vy *= -1;
-                    }
-                }
-
-                function setup() {
-                    width = canvas.width = window.innerWidth;
-                    height = canvas.height = window.innerHeight;
-                    stars = []; // Clear existing stars
-                    for(let i = 0; i < targetStarCount; i++) {
-                        stars.push(new Star());
-                    }
-                }
-
-                // This is the self-optimization logic
-                function adjustQuality() {
-                    if (perfMonitor.isPaused) return;
-
-                    const avgFPS = perfMonitor.getAverageFPS();
-
-                    if (avgFPS > perfMonitor.highPerfThreshold && targetStarCount < maxStars) {
-                        targetStarCount = Math.min(targetStarCount + 5, maxStars); // Increase stars
-                    } else if (avgFPS < perfMonitor.lowPerfThreshold && targetStarCount > minStars) {
-                        targetStarCount = Math.max(targetStarCount - 10, minStars); // Decrease stars
-                    }
-
-                    // Add or remove stars to match the new target
-                    while (stars.length < targetStarCount) {
-                        stars.push(new Star());
-                    }
-                    while (stars.length > targetStarCount) {
-                        stars.pop();
-                    }
-                }
-
-                setInterval(adjustQuality, 2000); // Check and adjust quality every 2 seconds
-
-                function animate() {
-                    if (perfMonitor.isPaused || document.body.classList.contains('low-performance')) {
-                        ctx.clearRect(0, 0, width, height); // Keep canvas clear when paused
-                        requestAnimationFrame(animate);
-                        return;
-                    }
-
-                    perfMonitor.tick();
-                    ctx.clearRect(0, 0, width, height);
-                    stars.forEach(s => {
-                        s.update();
-                        s.draw();
-                    });
-                    requestAnimationFrame(animate);
-                }
-
-                let resizeTimeout;
-                window.addEventListener('resize', () => {
-                    clearTimeout(resizeTimeout);
-                    resizeTimeout = setTimeout(setup, 250);
-                });
-
-                setup();
-                animate();
-            }
-
-            // Let's go!
-            init();
-        });
-    </script>
 <script>
 particlesJS('particles-js', {
   "particles": {
